@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 import os
 import re
 from collections import Counter
+
+answers={}
  
 
 print('*'*80)
@@ -18,6 +20,7 @@ print('Вопрос №1')
 print('У какого фильма из списка самый большой бюджет\n')
 movie_bd = pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 display(movie_bd.original_title[movie_bd['budget'] == movie_bd.budget.max()])
+answers['1']='+','Pirates of the Carribean: On Stranger Tides (tt1298650)'
 print()
 
 
@@ -26,6 +29,7 @@ print('Вопрос №2')
 print('Какой из фильмов самый длительный (в минутах)\n')
 movie_bd = pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 display(movie_bd.sort_values(by='runtime', ascending = False).head(1)['original_title'])
+answers['2']='+','Gods and Generals (tt0279111)'
 print()
 
 
@@ -34,6 +38,7 @@ print('Вопрос №3')
 print('Какой из фильмов самый короткий (в минутах)\n')
 movie_bd = pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 display(movie_bd.sort_values(by='runtime', ascending = True).head(1)['original_title'])
+answers['3']='+','Winnie the Pooh (tt1449283)'
 print()
 
 
@@ -42,6 +47,7 @@ print('Вопрос №4')
 print('Какова средняя длительность фильмов\n')
 movie_bd = pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 display(round(movie_bd.runtime.mean()))
+answers['4']='+','110'
 print()
 
 
@@ -50,6 +56,7 @@ print('Вопрос №5')
 print('Каково медианное значение длительности фильмов\n') 
 movie_bd = pd.read_csv('../.spyder-py3/movie_bd_v5.csv') 
 display(movie_bd['runtime'].median())
+answers['5']='+','107'
 print()
 
 
@@ -61,6 +68,7 @@ movie_bd = pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 #производство средствами
 profit=movie_bd.revenue-movie_bd.budget
 display(movie_bd[profit == profit.max()]['original_title'])
+answers['6']='+','Avatar (tt0499549)'
 print()
 
 
@@ -70,6 +78,7 @@ print('Какой фильм самый убыточный\n')
 movie_bd = pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 profit=movie_bd.revenue-movie_bd.budget
 display(movie_bd.original_title[profit == profit.min()])
+answers['7']='+','The Lone Ranger (tt1210819)'
 print()
 
 
@@ -80,6 +89,7 @@ print('''У скольки фильмов из датасета объём сб�
 movie_bd = pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 display(movie_bd.revenue.loc[movie_bd.revenue>movie_bd.budget].count())
 display(movie_bd.original_title[movie_bd.revenue>movie_bd.budget].sort_values(ascending = True).head(1))
+answers['8']='+','1478'
 print()
 
 
@@ -89,6 +99,7 @@ print('Какой фильм оказался самым кассовым в 200
 movie_bd = pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 movie_bd['profit']=movie_bd['revenue']-movie_bd['budget']
 display(movie_bd[movie_bd['profit']==movie_bd[movie_bd['release_year']==2008]['profit'].max()]['original_title'])
+answers['9']='+','The Dark Knight (tt0468569)'
 print()
 
 
@@ -98,6 +109,7 @@ print('Самый убыточный фильм за период с 2012 по 2
 movie_bd = pd.read_csv('../.spyder-py3/movie_bd_v5.csv') 
 movie_bd['profit']=movie_bd['revenue']-movie_bd['budget']
 display(movie_bd[movie_bd['profit'] == movie_bd[(movie_bd['release_year'] > 2011) &  (movie_bd['release_year'] < 2015)]['profit'].min()]['original_title'])
+answers['10']='+','The Lone Ranger (tt1210819)'
 print()
 
 
@@ -114,6 +126,7 @@ genre = (movie_bd.set_index(movie_bd.columns.drop('genres',1).tolist())
       .loc[:, movie_bd.columns]
    )
 display(genre['genres'].value_counts().sort_values(ascending = False).head(1))
+answers['11']='+','Drama'
 print()
 
 
@@ -130,6 +143,7 @@ genre = (movie_bd.set_index(movie_bd.columns.drop('genres',1).tolist())
       .loc[:, movie_bd.columns]
    )
 display(genre[genre['profit'] > 0]['genres'].value_counts().head(5))
+answers['12']='+','Drama'
 print()
 
 
@@ -138,6 +152,7 @@ print('Вопрос №13')
 print('У какого режиссёра самые большие суммарные кассовые сборы\n')
 movie_bd = pd.read_csv('../.spyder-py3/movie_bd_v5.csv') 
 display(movie_bd.groupby(['director'])['revenue'].sum().sort_values(ascending=False).head(1))
+answers['13']='+','Peter Jackson'
 print()
 
 
@@ -146,7 +161,8 @@ print('Вопрос №14')
 print('Какой режисер снял больше всего фильмов в стиле Action\n')
 movie_bd=pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 movie_bd.genres='Action'
-display(movie_bd.groupby(['director'])['imdb_id'].count().sort_values(ascending=False).head(5))
+display(movie_bd.director.value_counts().head(5))
+answers['14']='-','Ridley Scott '
 print()
 
 
@@ -164,6 +180,7 @@ actor = (movie_bd.set_index(movie_bd.columns.drop('cast',1).tolist())
    )
 prof = actor[(actor['release_year'] == 2012)]
 display(prof.groupby(['cast'])['profit'].sum().sort_values(ascending=False).head(1))
+answers['15']='+','Chris Hemsworth'
 print()
 
 
@@ -180,6 +197,7 @@ actor = (movie_bd.set_index(movie_bd.columns.drop('cast',1).tolist())
       .loc[:, movie_bd.columns]
    )
 display(actor[actor['budget'] > actor['budget'].mean()]['cast'].value_counts().sort_values(ascending=False).head(1))
+answers['16']='+','Matt Damon'
 print()
 
 
@@ -207,6 +225,7 @@ c = collections.Counter()
 for word in nf:
      c[word] += 1
 print(c)
+answers['17']='+','Action'
 print()
 
 
@@ -217,6 +236,7 @@ movie_bd=pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 movie_bd['profit'] = movie_bd['revenue'] - movie_bd['budget']
 param = movie_bd[movie_bd['production_companies'] == 'Paramount Pictures']
 display(param.original_title[param['profit']==param['profit'].min()])
+answers['18']='-','Domestic Disturbance - ответа нет в вариантах'
 print()
 
 
@@ -227,6 +247,7 @@ movie_bd=pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 movie_bd['profit'] = movie_bd['revenue'] - movie_bd['budget']
 group_revenue=movie_bd.groupby(['release_year'])['profit'].sum().sort_values(ascending=False)
 display(group_revenue.head(1))
+answers['19']='+','2015'
 print()
 
 
@@ -236,6 +257,7 @@ print('Какой самый прибыльный год для студии War
 movie_bd=pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 movie_bd['profit'] = movie_bd['revenue'] - movie_bd['budget']
 display(movie_bd[movie_bd['production_companies'].str.contains("Warner", na=False) == True].groupby(['release_year']).sum().sort_values(by='profit', ascending=False).head(1))
+answers['20']='+','2014'
 print()
 
 
@@ -247,6 +269,7 @@ movie_bd["Month"] = pd.to_datetime(movie_bd["release_date"], format="%m/%d/%Y")
 movie_bd["Month"] = pd.DatetimeIndex(movie_bd['Month']).month
 xx = movie_bd.groupby(["Month"])['imdb_id'].count()
 display(xx.sort_values(ascending=False).head(1))
+answers['21']='+','9 - Сентябрь'
 print()
 
 
@@ -257,6 +280,7 @@ movie_bd=pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 movie_bd["Month"] = pd.to_datetime(movie_bd["release_date"], format="%m/%d/%Y")
 movie_bd["Month"] = pd.DatetimeIndex(movie_bd['Month']).month
 display(movie_bd[(movie_bd['Month'] == 6) | (movie_bd['Month'] == 7) | (movie_bd['Month'] == 8)]['imdb_id'].count())
+answers['22']='+','450'
 print()
 
 
@@ -267,6 +291,7 @@ movie_bd=pd.read_csv('../.spyder-py3/movie_bd_v5.csv')
 movie_bd["Month"] = pd.to_datetime(movie_bd["release_date"], format="%m/%d/%Y")
 movie_bd["Month"] = pd.DatetimeIndex(movie_bd['Month']).month
 display(movie_bd[(movie_bd['Month'] == 12) | (movie_bd['Month'] == 1) | (movie_bd['Month'] == 2)].groupby(['director']).count().sort_values(by='imdb_id', ascending=False).head(1))
+answers['23']='+','Peter Jackson '
 print()
 
 
@@ -285,6 +310,7 @@ product = (movie_bd.set_index(movie_bd.columns.drop('production_companies',1).to
       .loc[:, movie_bd.columns]
    )
 display(product.groupby('production_companies')['length'].max().sort_values(ascending=False).head())
+answers['24']='+','Four By Two Productions'
 print()
 
 
@@ -301,7 +327,9 @@ product = (movie_bd.set_index(movie_bd.columns.drop('production_companies',1).to
         .rename(columns={0:'production_companies'})
       .loc[:, movie_bd.columns]
    )
-display(product.groupby('production_companies')['word'].max().sort_values(ascending=False).head(15))
+display(product.groupby('production_companies')['word'].max().sort_values(ascending=False).head(30
+                                                                                                ))
+answers['25']='-','Warner Bros.'
 print()
 
 
@@ -314,6 +342,7 @@ persent1 = int(len(movie_bd) * 0.01)
 #отсортируем по убыванию 1% лучших по рейтингу фильмов 
 xx = movie_bd.sort_values(by='vote_average',  ascending=False)[:persent1]
 display(xx.original_title)
+answers['26']='+','Inside Out,The Dark Knight,12 Years a Slave'
 print()
 
 
@@ -344,5 +373,10 @@ print("Hugh Jackman & Ian McKellen -",len(his))
 print("Vin Diesel & Paul Walker -",len(vps))
 print("Adam Sandler & Kevin James -",len(aks))
 print("Daniel Radcliffe & Rupert Grint -",len(drs))
+answers['27']='+','Daniel Radcliffe & Rupert Grint'
+
+
+display(answers)
+display(len(answers))
 
 
