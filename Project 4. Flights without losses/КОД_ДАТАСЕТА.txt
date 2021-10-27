@@ -1,0 +1,30 @@
+select 
+    f.flight_id as id_рейса,
+    f.flight_no as Рейс_№,
+    a.model as Самолет,
+    f.aircraft_code as Код_самолета,
+    f.departure_city as Вылет_из,
+    f.arrival_city as Прилет_в,
+    f.departure_airport as Аэропорт,
+    Date_part('minute', f.scheduled_duration) as Время_полета_мин,
+    sum(tf.amount) as Сум_цена_билетов,
+    max(boarding_no) as Колво_пасс
+    
+from 
+    dst_project.flights_V f
+    join dst_project.ticket_flights tf on tf.flight_id=f.flight_id
+    join dst_project.aircrafts a on a.aircraft_code=f.aircraft_code
+    join dst_project.boarding_passes as bp on bp.flight_id=f.flight_id
+WHERE f.departure_airport = 'AAQ' and f.departure_city='Анапа'
+  AND (date_trunc('month', scheduled_departure) in ('2017-01-01','2017-02-01', '2017-12-01'))
+  AND status not in ('Cancelled')
+group by
+    f.flight_id,
+    f.flight_no,
+    a.model,
+    f.departure_airport, 
+    f.departure_city,
+    f.arrival_city,
+    f.aircraft_code,
+    f.scheduled_duration
+order by 9 desc
